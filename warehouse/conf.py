@@ -25,11 +25,13 @@ class Settings(BaseSettings):
         "django.contrib.staticfiles",
 
         # External Applications
+        "django_pgenum",
         "south",
 
         # Warehouse Apps
         "warehouse",
         "warehouse.accounts",
+        "warehouse.packaging",
         "warehouse.utils",
     ]
 

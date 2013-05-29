@@ -17,9 +17,18 @@ from django.db.models import fields
 from south.modelsinspector import add_introspection_rules
 
 
-def install_citext(sender, db, **kwargs):
-    cursor = connections[db].cursor()
-    cursor.execute("CREATE EXTENSION IF NOT EXISTS citext")
+class URLTextField(fields.URLField):
+
+    # TODO: Make sure there is no length restriction
+
+    def db_type(self, connection):
+        return "text"
+
+
+class CaseInsensitiveTextField(fields.TextField):
+
+    def db_type(self, connection):
+        return "citext"
 
 
 class CaseInsensitiveCharField(fields.CharField):
@@ -30,6 +39,17 @@ class CaseInsensitiveCharField(fields.CharField):
         return "citext"
 
 
+def install_citext(sender, db, **kwargs):
+    cursor = connections[db].cursor()
+    cursor.execute("CREATE EXTENSION IF NOT EXISTS citext")
+
+
+add_introspection_rules([],
+    ["^warehouse\.utils\.db_fields\.URLTextField"],
+)
+add_introspection_rules([],
+    ["^warehouse\.utils\.db_fields\.CaseInsensitiveTextField"],
+)
 add_introspection_rules([],
     ["^warehouse\.utils\.db_fields\.CaseInsensitiveCharField"],
 )

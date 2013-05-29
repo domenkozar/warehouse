@@ -38,3 +38,10 @@ SET
     is_staff = TRUE, is_superuser = TRUE
 FROM roles
 WHERE roles.role_name = 'Admin' AND accounts_user.username = roles.user_name;
+
+
+-- Copy over the classifiers into the new classifiers table
+INSERT INTO packaging_classifier
+    (classifier)
+SELECT regexp_split_to_array(classifier, ' :: ')
+    FROM trove_classifiers;

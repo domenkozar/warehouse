@@ -4,5 +4,8 @@ invoke
 # Install Django (we are using an unreleased version)
 -e git+https://github.com/django/django.git@stable/1.6.x#egg=Django
 
+# Install djorm-ext-pgarray (We are using an unreleased version)
+-e git+https://github.com/niwibe/djorm-ext-pgarray.git#egg=djorm-ext-pgrarry
+
 # Install Warehouse (and it's dependencies)
 -e .[tests]

@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from setuptools import setup, find_packages
+import setuptools
 
 import warehouse
 
 
-setup(
+setuptools.setup(
     name=warehouse.__title__,
     version=warehouse.__version__,
 
@@ -35,6 +35,8 @@ setup(
         "Django",
         "django-braces",
         "django-configurations>=0.2.1",
+        "django-pgenum",
+        "djorm-ext-pgarray",
         "psycopg2",
         "South>=0.8",
     ],
@@ -50,7 +52,7 @@ setup(
         ],
     },
 
-    packages=find_packages(exclude=["tests"]),
+    packages=setuptools.find_packages(exclude=["tests"]),
     package_data={
         "warehouse": [
             "templates/*.html",

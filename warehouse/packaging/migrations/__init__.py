@@ -11,19 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from django.db import connections
-from django.db.models.signals import pre_syncdb
-from django.dispatch import receiver
-
-from warehouse.utils.db_fields import install_citext
-
-
-# Registered in warehouse.management so that it is picked up during syncdb
-pre_syncdb.connect(install_citext)
-
-
-# Install hstore
-@receiver(pre_syncdb)
-def _install_hstore(sender, db, **kwargs):
-    cursor = connections[db].cursor()
-    cursor.execute("CREATE EXTENSION IF NOT EXISTS hstore")
