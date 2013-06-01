@@ -42,7 +42,7 @@ _valid_source_label_regex = re.compile(
 
 class Classifier(models.Model):
 
-    classifier = ArrayField(dbtype="citext", unique=True)
+    classifier = ArrayField(dbtype="text", unique=True)
 
     class Meta:
         verbose_name = _("Classifier")
@@ -131,7 +131,7 @@ class Release(models.Model):
     license = models.TextField(_("License"), blank=True)
     license_url = URLTextField(_("License URL"), blank=True)
     keywords = ArrayField(dbtype="text")
-    classifiers = models.ManyToManyField(Classifier)
+    classifiers = models.ManyToManyField(Classifier, blank=True)
 
     class Meta:
         verbose_name = _("Release")
