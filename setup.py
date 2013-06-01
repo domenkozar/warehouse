@@ -36,7 +36,7 @@ setuptools.setup(
         "django-braces",
         "django-configurations>=0.2.1",
         "django-pgenum",
-        "djorm-ext-pgarray",
+        "djorm-ext-pgarray>=0.5",
         "psycopg2",
         "South>=0.8",
     ],
