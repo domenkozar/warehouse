@@ -48,6 +48,9 @@ class Classifier(models.Model):
         verbose_name = _("Classifier")
         verbose_name_plural = _("Classifiers")
 
+    def __str__(self):
+        return " :: ".join(self.classifier)
+
 
 class Project(models.Model):
 
@@ -80,6 +83,9 @@ class Project(models.Model):
     class Meta:
         verbose_name = _("Project")
         verbose_name_plural = _("Projects")
+
+    def __str__(self):
+        return self.name
 
 
 class Release(models.Model):
@@ -142,6 +148,9 @@ class Release(models.Model):
             ("project", "version"),
         ]
 
+    def __str__(self):
+        return "%s %s" % (self.project.name, self.version)
+
 
 class ProjectURL(models.Model):
 
@@ -161,6 +170,9 @@ class ProjectURL(models.Model):
             # Labels are unique per release
             ("release", "label"),
         ]
+
+    def __str__(self):
+        return "%s => %s" % (self.label, self.url)
 
 
 class ContactRole(enum.Enum):
@@ -189,6 +201,14 @@ class Contact(models.Model):
         verbose_name = _("Contact")
         verbose_name_plural = _("Contacts")
 
+    def __str__(self):
+        parts = [self.name]
+        if self.email:
+            parts.append("<%s>" % self.email)
+        if self.url:
+            parts.append("(%s)" % self.url)
+        return " ".join(parts)
+
 
 class Contributor(models.Model):
 
@@ -208,3 +228,11 @@ class Contributor(models.Model):
     class Meta:
         verbose_name = _("Contributor")
         verbose_name_plural = _("Contributors")
+
+    def __str__(self):
+        parts = [self.name]
+        if self.email:
+            parts.append("<%s>" % self.email)
+        if self.url:
+            parts.append("(%s)" % self.url)
+        return " ".join(parts)
