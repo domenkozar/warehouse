@@ -147,6 +147,59 @@ class Release(models.Model):
         return "%s %s" % (self.project.name, self.version)
 
 
+class ContactRole(enum.Enum):
+
+    author = (..., _("Author"))
+    maintainer = (..., _("Maintainer"))
+    contributor = (..., _("Contributor"))
+
+
+class BaseContact(models.Model):
+
+    name = models.TextField(_("Name"))
+    email = models.EmailField(_("Email"), max_length=254, blank=True)
+    url = URLTextField(_("URL"), blank=True)
+    role = enum.EnumField(ContactRole,
+                    verbose_name=_("Role"),
+                    default=ContactRole.contributor,
+                )
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        parts = [self.name]
+        if self.email:
+            parts.append("<%s>" % self.email)
+        if self.url:
+            parts.append("(%s)" % self.url)
+        return " ".join(parts)
+
+
+class Contact(BaseContact):
+
+    release = models.ForeignKey(Release,
+                        verbose_name=_("Release"),
+                        related_name="contacts",
+                    )
+
+    class Meta:
+        verbose_name = _("Contact")
+        verbose_name_plural = _("Contacts")
+
+
+class Contributor(BaseContact):
+
+    release = models.ForeignKey(Release,
+                        verbose_name=_("Release"),
+                        related_name="contributors",
+                    )
+
+    class Meta:
+        verbose_name = _("Contributor")
+        verbose_name_plural = _("Contributors")
+
+
 class ProjectURL(models.Model):
 
     release = models.ForeignKey(Release,
@@ -168,66 +221,3 @@ class ProjectURL(models.Model):
 
     def __str__(self):
         return "%s => %s" % (self.label, self.url)
-
-
-class ContactRole(enum.Enum):
-
-    author = (..., _("Author"))
-    maintainer = (..., _("Maintainer"))
-    contributor = (..., _("Contributor"))
-
-
-class Contact(models.Model):
-
-    release = models.ForeignKey(Release,
-                        verbose_name=_("Release"),
-                        related_name="contacts",
-                    )
-
-    name = models.TextField(_("Name"))
-    email = models.EmailField(_("Email"), max_length=254, blank=True)
-    url = URLTextField(_("URL"), blank=True)
-    role = enum.EnumField(ContactRole,
-                    verbose_name=_("Role"),
-                    default=ContactRole.contributor,
-                )
-
-    class Meta:
-        verbose_name = _("Contact")
-        verbose_name_plural = _("Contacts")
-
-    def __str__(self):
-        parts = [self.name]
-        if self.email:
-            parts.append("<%s>" % self.email)
-        if self.url:
-            parts.append("(%s)" % self.url)
-        return " ".join(parts)
-
-
-class Contributor(models.Model):
-
-    release = models.ForeignKey(Release,
-                        verbose_name=_("Release"),
-                        related_name="contributors",
-                    )
-
-    name = models.TextField(_("Name"))
-    email = models.EmailField(_("Email"), max_length=254, blank=True)
-    url = URLTextField(_("URL"), blank=True)
-    role = enum.EnumField(ContactRole,
-                    verbose_name=_("Role"),
-                    default=ContactRole.contributor,
-                )
-
-    class Meta:
-        verbose_name = _("Contributor")
-        verbose_name_plural = _("Contributors")
-
-    def __str__(self):
-        parts = [self.name]
-        if self.email:
-            parts.append("<%s>" % self.email)
-        if self.url:
-            parts.append("(%s)" % self.url)
-        return " ".join(parts)
