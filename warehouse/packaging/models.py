@@ -107,7 +107,6 @@ class Release(models.Model):
 
     # TODO: Ensure valid version in the code when metadata == 2.0
 
-    # Required fields
     project = models.ForeignKey(Project, verbose_name=_("Project"))
     version = models.TextField(_("Version"))
     metadata_version = models.CharField(_("Metadata Version"),
@@ -117,11 +116,8 @@ class Release(models.Model):
                             ],
                             max_length=3,
                         )
-
-    # Optional fields
     summary = models.TextField(_("Summary"), blank=True)
-    description = models.TextField(_("Description"), blank=True)
-    description_format = models.TextField(_("Description Format"), blank=True)
+
     source_label = CaseInsensitiveTextField(_("Source label"),
                     blank=True,
                     validators=[
@@ -135,7 +131,6 @@ class Release(models.Model):
                 )
     source_url = URLTextField(_("Source URL"), blank=True)
     license = models.TextField(_("License"), blank=True)
-    license_url = URLTextField(_("License URL"), blank=True)
     keywords = ArrayField(dbtype="text")
     classifiers = models.ManyToManyField(Classifier, blank=True)
 
