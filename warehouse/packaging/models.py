@@ -147,6 +147,51 @@ class Release(models.Model):
         return "%s %s" % (self.project.name, self.version)
 
 
+class BaseDocument(models.Model):
+
+    content = models.TextField(_("Content"))
+    format = models.CharField(_("Content"), choices=[])
+
+    class Meta:
+        abstract = True
+
+
+class Description(BaseDocument):
+
+    release = models.OneToOneField(Release,
+                        verbose_name=_("Release"),
+                        related_name="description",
+                    )
+
+    class Meta:
+        verbose_name = _("Description")
+        verbose_name_plural = _("Descriptions")
+
+
+class License(BaseDocument):
+
+    release = models.OneToOneField(Release,
+                        verbose_name=_("Release"),
+                        related_name="license",
+                    )
+
+    class Meta:
+        verbose_name = _("License")
+        verbose_name_plural = _("Licenses")
+
+
+class Changelog(BaseDocument):
+
+    release = models.OneToOneField(Release,
+                        verbose_name=_("Release"),
+                        related_name="changelog",
+                    )
+
+    class Meta:
+        verbose_name = _("Changelog")
+        verbose_name_plural = _("Changelogs")
+
+
 class ContactRole(enum.Enum):
 
     author = (..., _("Author"))
