@@ -266,3 +266,106 @@ class ProjectURL(models.Model):
 
     def __str__(self):
         return "%s => %s" % (self.label, self.url)
+
+
+class Dependency(models.Model):
+
+    # TODO: Put the Valid regex into a CHECK Constraint
+    # TODO: Figure out if the special Extra's are valid inside of a conditional
+    #           dependency
+    # TODO: Move the Extra regex into a CHECK CONSTRAINT
+    # TODO: Try to Validate the environment Marker
+    # NOTE: This is a single model that represents both *_requires and
+    #           *_may_require. This was done for simplicity sake. If PEP426
+    #           contains to retain the separation of the fields then the
+    #           separation will be faked inside the code.
+
+    dependency = CaseInsensitiveTextField(_("Dependency"),
+                    validators=[
+                        validators.RegexValidator(
+                            _valid_project_name_regex,
+                            _("This value may contain only letters, numbers, "
+                                "and ./-/_ characters."),
+                            "invalid",
+                        ),
+                    ],
+                )
+    extra = CaseInsensitiveTextField(_("Extra"),
+                    blank=True,
+                    validators=[
+                        validators.RegexValidator(
+                            _valid_project_name_regex,
+                            _("This value may contain only letters, numbers, "
+                                "and ./-/_ characters."),
+                            "invalid",
+                        ),
+                    ],
+                )
+    environment = models.TextField(_("Environment"), blank=True)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def conditional(self):
+        return bool(self.extra or self.environment)
+
+
+class MetaRequire(Dependency):
+
+    release = models.ForeignKey(Release,
+                        verbose_name=_("Release"),
+                        related_name="meta_requires",
+                    )
+
+    class Meta:
+        verbose_name = _("Meta Requirement")
+        verbose_name_plural = _("Meta Requirements")
+
+
+class RunRequire(Dependency):
+
+    release = models.ForeignKey(Release,
+                        verbose_name=_("Release"),
+                        related_name="run_requires",
+                    )
+
+    class Meta:
+        verbose_name = _("Runtime Requirement")
+        verbose_name_plural = _("Runtime Requirements")
+
+
+class TestRequire(Dependency):
+
+    release = models.ForeignKey(Release,
+                        verbose_name=_("Release"),
+                        related_name="test_requires",
+                    )
+
+    class Meta:
+        verbose_name = _("Test Requirement")
+        verbose_name_plural = _("Test Requirements")
+
+
+class BuildRequire(Dependency):
+
+    release = models.ForeignKey(Release,
+                        verbose_name=_("Release"),
+                        related_name="build_requires",
+                    )
+
+    class Meta:
+        verbose_name = _("Build Requirement")
+        verbose_name_plural = _("Build Requirements")
+
+
+class DevRequire(Dependency):
+
+    release = models.ForeignKey(Release,
+                        verbose_name=_("Release"),
+                        related_name="dev_requires",
+                    )
+
+    class Meta:
+        verbose_name = _("Dev Requirement")
+        verbose_name_plural = _("Dev Requirements")
