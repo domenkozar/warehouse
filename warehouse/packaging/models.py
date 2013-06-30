@@ -289,7 +289,7 @@ class Dependency(models.Model):
     #           contains to retain the separation of the fields then the
     #           separation will be faked inside the code.
 
-    dependency = CaseInsensitiveTextField(_("Dependency"),
+    install = CaseInsensitiveTextField(_("Installation Specifier"),
                     validators=[
                         validators.RegexValidator(
                             _valid_project_name_regex,
