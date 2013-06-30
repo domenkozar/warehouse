@@ -106,6 +106,10 @@ class Release(models.Model):
     #   ensures whenever source_url has a value, that it's unique per project
 
     # TODO: Ensure valid version in the code when metadata == 2.0
+    # TODO: Ensure valid extras names
+    # TODO: Ensure valid provides
+    # TODO: Ensure valid obsoleted_by
+    # TODO: Ensure valid supports_environments
 
     project = models.ForeignKey(Project, verbose_name=_("Project"))
     version = models.TextField(_("Version"))
@@ -133,6 +137,11 @@ class Release(models.Model):
     license = models.TextField(_("License"), blank=True)
     keywords = ArrayField(dbtype="text")
     classifiers = models.ManyToManyField(Classifier, blank=True)
+
+    extras = ArrayField(dbtype="text")
+    provides = ArrayField(dbtype="text")
+    obsoleted_by = models.TextField(_("Obsoleted By"), blank=True)
+    supports_environments = ArrayField(dbtype="text")
 
     class Meta:
         verbose_name = _("Release")
